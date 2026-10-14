@@ -1,0 +1,36 @@
+.main {
+  min-height: 100dvh;
+  background-color: #161f3d;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  min-width: 0;
+  color: #0a0627;
+  background-color: #fff;
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  justify-content: center;
+  align-items: center;
+}
+
+.title {
+  margin: 0;
+  font-size: 36px;
+  line-height: 42px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.description {
+  text-align: center;
+}

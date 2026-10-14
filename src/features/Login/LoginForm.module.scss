@@ -1,0 +1,52 @@
+.root {
+  width: 376px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+
+  & + .field {
+    margin-top: -12px;
+  }
+}
+
+.label,
+.error {
+  margin: 0;
+
+  span {
+    color: #8d8d8d;
+  }
+}
+
+.error {
+  color: #d92d20;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+}
+
+.input {
+  min-width: 0;
+}
+
+.submit {
+  justify-self: center;
+}
+
+.methodSwitch {
+  justify-self: center;
+  padding: 0;
+  color: inherit;
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  cursor: pointer;
+}

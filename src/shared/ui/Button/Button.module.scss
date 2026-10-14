@@ -1,0 +1,28 @@
+.btn {
+  padding: 8px 12px;
+  color: #fff;
+  font-weight: 600;
+  background-color: #1636b8;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 24px;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &:hover {
+    background-color: #3e5edf;
+    color: #fff;
+
+    svg {
+      filter: brightness(0) invert(1);
+    }
+  }
+}

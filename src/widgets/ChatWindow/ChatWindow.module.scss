@@ -1,0 +1,108 @@
+.root {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100%;
+  min-width: 0;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  min-height: 64px;
+  padding: 12px 20px;
+  background-color: #f4f4ff;
+  border-bottom: 1px solid #eeeeef;
+}
+
+.avatar {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  color: #1636b8;
+  font-weight: 600;
+  background-color: #fff;
+  border-radius: 50%;
+}
+
+.message,
+.empty,
+.state,
+.title {
+  min-width: 0;
+}
+
+.title,
+.messageText {
+  margin: 0;
+}
+
+.title {
+  overflow: hidden;
+  color: #0a0627;
+  font-size: 18px;
+  line-height: 22px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menuButton {
+  padding: 8px;
+  color: #8d8d8d;
+  font-size: 18px;
+  line-height: 20px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 20px;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.message {
+  max-width: min(70%, 520px);
+  padding: 10px 12px;
+  color: #0a0627;
+  background-color: #f4f4ff;
+  border-radius: 12px;
+}
+
+.message[data-own="true"] {
+  align-self: flex-end;
+  color: #fff;
+  background-color: #1636b8;
+}
+
+.messageText {
+  overflow-wrap: anywhere;
+}
+
+.time {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  line-height: 16px;
+  opacity: 0.7;
+}
+
+.empty {
+  color: #0a0627;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.state {
+  margin: 0;
+  padding: 20px;
+  color: #8d8d8d;
+}

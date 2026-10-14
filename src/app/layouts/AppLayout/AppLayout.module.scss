@@ -1,0 +1,172 @@
+.main {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  background-color: #fafafa;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 28px 24px;
+  background-color: #161f3d;
+  color: #fff;
+}
+
+.content {
+  min-width: 0;
+  min-height: 100dvh;
+  padding: 40px;
+}
+
+.logoLink {
+  display: block;
+  width: fit-content;
+}
+
+.logoLink img {
+  display: block;
+  max-width: 100%;
+}
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+}
+
+.menuLink {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 70px;
+  padding: 24px 10px;
+  color: inherit;
+  font-size: 18px;
+  line-height: 22px;
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+.active {
+  background-color: #1f2e5f;
+}
+
+.menuIcon {
+  display: block;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.sidebarFooter {
+  margin: auto -24px -28px;
+}
+
+.supportButton {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 22px 24px;
+  color: inherit;
+  font-size: 18px;
+  line-height: 24px;
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.accountMenu {
+  position: relative;
+  border-top: 1px solid rgb(255 255 255 / 50%);
+}
+
+.account {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  padding: 22px 24px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.account::-webkit-details-marker {
+  display: none;
+}
+
+.accountAvatar {
+  display: grid;
+  width: 56px;
+  height: 56px;
+  place-items: center;
+  color: #1636b8;
+  font-size: 20px;
+  font-weight: 600;
+  background-color: #fff;
+  border-radius: 50%;
+}
+
+.accountInfo {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.accountInfo strong,
+.accountInfo span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.accountInfo strong {
+  font-size: 20px;
+  line-height: 26px;
+}
+
+.accountInfo span {
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.accountArrow {
+  transition: transform 0.2s ease-in-out;
+}
+
+.accountMenu[open] .accountArrow {
+  transform: rotate(-90deg);
+}
+
+.accountActions {
+  position: absolute;
+  right: 16px;
+  bottom: calc(100% + 8px);
+  left: 16px;
+  z-index: 2;
+  display: grid;
+  padding: 8px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 18%);
+}
+
+.accountActions a,
+.accountActions button {
+  padding: 10px 12px;
+  color: #0a0627;
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  background: none;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.accountActions a:hover,
+.accountActions button:hover {
+  background-color: #f4f4ff;
+}

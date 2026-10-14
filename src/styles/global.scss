@@ -1,0 +1,62 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  padding: 0;
+  margin: 0;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: "Inter", sans-serif;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+input {
+  border-radius: 8px;
+  border: solid 1px #d6d6d6;
+  width: 100%;
+  height: 40px;
+  padding: 8px 12px;
+  outline: none;
+  transition:
+    border-color 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
+
+  &[aria-invalid="true"] {
+    border-color: #fda29b;
+  }
+}
+
+.link {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  text-decoration: underline;
+  text-decoration-skip-ink: none;
+  color: #1636b8;
+  transition: text-decoration-color 0.3s ease-in-out;
+
+  &:hover {
+    text-decoration-color: #1636b8;
+  }
+}

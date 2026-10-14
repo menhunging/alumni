@@ -1,0 +1,389 @@
+.section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 44px;
+  width: 100%;
+}
+
+.left {
+  flex: 1;
+}
+
+.right {
+  width: 376px;
+}
+
+.events {
+  margin-top: 32px;
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgb(10 6 39 / 8%);
+}
+
+.eventsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.eventsTitle {
+  margin: 0;
+  color: #0a0627;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+}
+
+.allEventsLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #1636b8;
+  font-size: 14px;
+  line-height: 20px;
+  text-decoration: none;
+}
+
+.eventsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.eventCard {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #e6e6e6;
+  border-radius: 16px;
+}
+
+.eventImage {
+  position: relative;
+  min-height: 162px;
+  overflow: hidden;
+  background-color: #eef1f6;
+  background-position: center;
+  background-size: cover;
+  border-radius: 14px;
+}
+
+.eventDate {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: grid;
+  min-width: 64px;
+  padding: 6px 10px;
+  color: #0a0627;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.eventDate strong {
+  font-size: 18px;
+  line-height: 22px;
+}
+
+.eventDate span {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.eventFormat {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 6px 10px;
+  color: #0a0627;
+  font-size: 13px;
+  line-height: 18px;
+  border-radius: 8px;
+}
+
+.online {
+  background-color: #c9f7d5;
+}
+
+.offline {
+  background-color: #ead8f8;
+}
+
+.eventTitle {
+  margin: 16px 0 8px;
+  color: #0a0627;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 600;
+}
+
+.eventTime,
+.eventPlace {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.eventTime {
+  color: #8d8d8d;
+}
+
+.eventPlace {
+  margin-top: 8px;
+  color: #0a0627;
+}
+
+.registerButton {
+  width: 100%;
+  margin-top: 16px;
+  padding: 8px 12px;
+  color: #fff;
+  font-weight: 600;
+  background-color: #1636b8;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.notifications {
+  margin-top: 24px;
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgb(10 6 39 / 8%);
+}
+
+.notificationsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.notificationsTitle {
+  margin: 0;
+  color: #0a0627;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+}
+
+.allNotificationsLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #1636b8;
+  font-size: 14px;
+  line-height: 20px;
+  text-decoration: none;
+}
+
+.notificationsList {
+  display: grid;
+  gap: 8px;
+}
+
+.notification {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  min-height: 88px;
+  padding: 12px;
+  border: 1px solid #e6e6e6;
+  border-radius: 16px;
+}
+
+.notificationImage {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  background-color: #eef1f6;
+  background-position: center;
+  background-size: cover;
+  border-radius: 50%;
+}
+
+.notificationContent {
+  min-width: 0;
+}
+
+.notificationTitle,
+.notificationText,
+.notificationTime {
+  margin: 0;
+}
+
+.notificationTitle {
+  color: #0a0627;
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 600;
+}
+
+.notificationText {
+  margin-top: 2px;
+  color: #0a0627;
+  font-size: 15px;
+  line-height: 20px;
+}
+
+.notificationTime {
+  display: block;
+  margin-top: 2px;
+  color: #8d8d8d;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.notificationButton {
+  flex-shrink: 0;
+  margin-left: auto;
+  padding: 8px 12px;
+  color: #1636b8;
+  font-weight: 600;
+  background-color: #fff;
+  border: 1px solid #1636b8;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.myEvents {
+  margin-top: 32px;
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgb(10 6 39 / 8%);
+}
+
+.myEventsTitle {
+  margin: 0 0 16px;
+  color: #0a0627;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+}
+
+.myEventsList {
+  display: grid;
+  gap: 16px;
+}
+
+.myEvent {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.myEventDate {
+  display: grid;
+  flex: 0 0 72px;
+  min-height: 60px;
+  padding: 6px 8px;
+  color: #0a0627;
+  text-align: center;
+  background-color: #f1f0ff;
+  border-radius: 8px;
+}
+
+.myEventDate strong {
+  font-size: 20px;
+  line-height: 26px;
+}
+
+.myEventDate span {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.myEventContent {
+  min-width: 0;
+}
+
+.myEventTitle,
+.myEventMeta {
+  margin: 0;
+}
+
+.myEventTitle {
+  color: #0a0627;
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 600;
+}
+
+.myEventMeta {
+  margin-top: 6px;
+  color: #0a0627;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.myEventStatus {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 20px;
+  border-radius: 8px;
+}
+
+.registered {
+  color: #299764;
+  background-color: #cef1e0;
+}
+
+.pending {
+  color: #304694;
+  background-color: #e7e9f7;
+}
+
+.allMyEventsLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 24px;
+  color: #1636b8;
+  font-size: 14px;
+  line-height: 20px;
+  text-decoration: none;
+}
+
+@media (max-width: 1100px) {
+  .left {
+    flex-basis: 100%;
+  }
+
+  .right {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .eventsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .notification {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .notificationButton {
+    margin-left: 60px;
+  }
+}

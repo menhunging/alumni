@@ -1,0 +1,55 @@
+.root {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 20px;
+  height: calc(100dvh - 40px);
+  overflow: hidden;
+  padding-bottom: 40px;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(300px, 572px) minmax(0, 1fr);
+  gap: 16px;
+  min-height: 0;
+}
+
+.chatList,
+.chatContent {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0px 2px 6px 0px #0000000a;
+  border-radius: 16px;
+}
+
+.title {
+  margin: 0;
+  color: #0a0627;
+  font-size: 28px;
+  line-height: 36px;
+}
+
+.backButton {
+  display: none;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .chatList[data-open="false"] {
+    display: none;
+  }
+
+  .chatContent:has(.backButton) {
+    display: block;
+  }
+
+  .backButton {
+    display: block;
+  }
+}
