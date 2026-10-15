@@ -1,7 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type FormEvent, useState } from "react";
+import { type SyntheticEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import {
+  useLoginWithCode,
+  useRequestLoginCode,
+} from "../../entities/auth/api/mutations";
+import type { PendingCodeLogin } from "../../entities/auth/model/types";
 import { Button } from "../../shared/ui/Button/Button";
 import { Input } from "../../shared/ui/Input/Input";
 import styles from "./LoginForm.module.scss";
@@ -12,22 +17,29 @@ const codeLoginSchema = z.object({
     .trim()
     .min(1, "Введите email")
     .pipe(z.email("Введите корректный email")),
-  code: z.string().regex(/^\d{6}$/, "Введите код из 6 цифр"),
+  code: z.string().regex(/^\d{4}$/, "Введите код из 4 цифр"),
 });
 
 type CodeLoginFormValues = z.infer<typeof codeLoginSchema>;
 
 interface CodeLoginFormProps {
+  onSuccess: () => void;
   onPasswordLoginClick: () => void;
 }
 
 export function CodeLoginForm({
+  onSuccess,
   onPasswordLoginClick,
 }: CodeLoginFormProps) {
   const [isCodeRequested, setIsCodeRequested] = useState(false);
-  const [isEndpointUnavailable, setIsEndpointUnavailable] = useState(false);
+  const [pendingLogin, setPendingLogin] = useState<PendingCodeLogin | null>(
+    null,
+  );
+  const requestCodeMutation = useRequestLoginCode();
+  const loginMutation = useLoginWithCode();
   const {
     formState: { errors },
+    getValues,
     handleSubmit,
     register,
     setFocus,
@@ -45,16 +57,35 @@ export function CodeLoginForm({
       return;
     }
 
-    setIsEndpointUnavailable(false);
-    setIsCodeRequested(true);
-    window.setTimeout(() => setFocus("code"));
+    requestCodeMutation.mutate(
+      { email: getValues("email").trim() },
+      {
+        onSuccess: (result) => {
+          setPendingLogin(result);
+          setIsCodeRequested(true);
+          window.setTimeout(() => setFocus("code"));
+        },
+      },
+    );
   };
 
-  const onSubmit = handleSubmit(() => {
-    setIsEndpointUnavailable(true);
+  const onSubmit = handleSubmit(({ code }) => {
+    if (!pendingLogin) {
+      return;
+    }
+
+    loginMutation.mutate(
+      {
+        ...pendingLogin,
+        code,
+      },
+      { onSuccess },
+    );
   });
 
-  const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = (
+    event: SyntheticEvent<HTMLFormElement, SubmitEvent>,
+  ) => {
     if (!isCodeRequested) {
       event.preventDefault();
       void handleRequestCode();
@@ -87,6 +118,14 @@ export function CodeLoginForm({
         </div>
       )}
 
+      {requestCodeMutation.isError && (
+        <p className={styles.error} role="alert">
+          {requestCodeMutation.error instanceof Error
+            ? requestCodeMutation.error.message
+            : "Не удалось отправить код"}
+        </p>
+      )}
+
       {!isCodeRequested ? (
         <>
           <button
@@ -97,8 +136,12 @@ export function CodeLoginForm({
             Войти по паролю
           </button>
 
-          <Button className={styles.submit} type="submit">
-            Далее
+          <Button
+            className={styles.submit}
+            type="submit"
+            disabled={requestCodeMutation.isPending}
+          >
+            {requestCodeMutation.isPending ? "Отправка…" : "Далее"}
           </Button>
         </>
       ) : (
@@ -113,7 +156,7 @@ export function CodeLoginForm({
               type="text"
               inputMode="numeric"
               autoComplete="one-time-code"
-              maxLength={6}
+              maxLength={4}
               aria-invalid={Boolean(errors.code)}
               {...register("code")}
             />
@@ -124,22 +167,31 @@ export function CodeLoginForm({
             )}
           </div>
 
-          {isEndpointUnavailable && (
+          {loginMutation.isError && (
             <p className={styles.error} role="alert">
-              Вход по коду пока недоступен
+              {loginMutation.error instanceof Error
+                ? loginMutation.error.message
+                : "Не удалось выполнить вход"}
             </p>
           )}
 
           <button
             className={`${styles.methodSwitch} link`}
             type="button"
-            onClick={() => setIsEndpointUnavailable(true)}
+            disabled={requestCodeMutation.isPending}
+            onClick={handleRequestCode}
           >
-            Отправить код повторно
+            {requestCodeMutation.isPending
+              ? "Отправка…"
+              : "Отправить код повторно"}
           </button>
 
-          <Button className={styles.submit} type="submit">
-            Войти
+          <Button
+            className={styles.submit}
+            type="submit"
+            disabled={loginMutation.isPending}
+          >
+            {loginMutation.isPending ? "Вход…" : "Войти"}
           </Button>
         </>
       )}

@@ -29,6 +29,7 @@ export function AppLayout() {
   const { data: user } = useCurrentUser();
   const clearSession = useAuthStore((state) => state.clearSession);
   const queryClient = useQueryClient();
+  const isProfileIncomplete = user?.profileCompleted === false;
 
   const handleLogout = () => {
     queryClient.clear();
@@ -42,14 +43,27 @@ export function AppLayout() {
           <img src={logo} alt="Alumni" />
         </NavLink>
 
-        <nav className={styles.navigation} aria-label="Основная навигация">
+        <nav
+          className={`${styles.navigation} ${
+            isProfileIncomplete ? styles.navigationDisabled : ""
+          }`.trim()}
+          aria-disabled={isProfileIncomplete || undefined}
+          aria-label="Основная навигация"
+        >
           {menuItems.map((item) => (
             <NavLink
               className={({ isActive }) =>
                 `${styles.menuLink} ${isActive ? styles.active : ""}`.trim()
               }
+              aria-disabled={isProfileIncomplete || undefined}
               end={item.to === "/"}
               key={item.to}
+              onClick={(event) => {
+                if (isProfileIncomplete) {
+                  event.preventDefault();
+                }
+              }}
+              tabIndex={isProfileIncomplete ? -1 : undefined}
               to={item.to}
             >
               {item.icon ? (
@@ -91,43 +105,53 @@ export function AppLayout() {
             <span>Помощь и поддержка</span>
           </button>
 
-          <details className={styles.accountMenu}>
-            <summary className={styles.account}>
-              <span className={styles.accountAvatar} aria-hidden="true">
-                {user?.name.slice(0, 1).toUpperCase() ?? "П"}
-              </span>
-              <span className={styles.accountInfo}>
-                <strong>
-                  {user
-                    ? `${user.name} ${user.surname}`.trim()
-                    : "Пользователь"}
-                </strong>
-                <span>Участник</span>
-              </span>
-              <svg
-                className={styles.accountArrow}
-                width="10"
-                height="18"
-                viewBox="0 0 10 18"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M1 1L9 9L1 17"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </summary>
-            <div className={styles.accountActions}>
-              <NavLink to="/settings">Настройки профиля</NavLink>
-              <button type="button" onClick={handleLogout}>
-                Выйти
-              </button>
-            </div>
-          </details>
+          {isProfileIncomplete ? (
+            <button
+              className={styles.logoutButton}
+              type="button"
+              onClick={handleLogout}
+            >
+              Выйти
+            </button>
+          ) : (
+            <details className={styles.accountMenu}>
+              <summary className={styles.account}>
+                <span className={styles.accountAvatar} aria-hidden="true">
+                  {user?.name.slice(0, 1).toUpperCase() ?? "П"}
+                </span>
+                <span className={styles.accountInfo}>
+                  <strong>
+                    {user
+                      ? `${user.name} ${user.surname}`.trim()
+                      : "Пользователь"}
+                  </strong>
+                  <span>Участник</span>
+                </span>
+                <svg
+                  className={styles.accountArrow}
+                  width="10"
+                  height="18"
+                  viewBox="0 0 10 18"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M1 1L9 9L1 17"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </summary>
+              <div className={styles.accountActions}>
+                <NavLink to="/settings">Настройки профиля</NavLink>
+                <button type="button" onClick={handleLogout}>
+                  Выйти
+                </button>
+              </div>
+            </details>
+          )}
         </footer>
       </aside>
 

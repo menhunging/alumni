@@ -47,6 +47,7 @@ export function LoginPage() {
           />
         ) : (
           <CodeLoginForm
+            onSuccess={handleSuccess}
             onPasswordLoginClick={() => setLoginMethod("password")}
           />
         )}

@@ -1,6 +1,12 @@
 import axios from "axios";
 import { apiClient } from "../../../shared/api/apiClient";
-import type { AuthUser, LoginCredentials } from "../model/types";
+import type {
+  AuthUser,
+  LoginWithCodeInput,
+  LoginCredentials,
+  PendingCodeLogin,
+  RequestLoginCodeInput,
+} from "../model/types";
 
 type ApiResponse<T> =
   | { success: true; message: T }
@@ -12,12 +18,18 @@ interface ApiUser {
   email: string;
   name?: string;
   surname?: string;
+  success_profile: 0 | 1 | "0" | "1";
   registration_date?: string;
   last_active_date: string;
 }
 
-interface LoginApiResponse {
+interface AuthenticationApiResponse extends ApiUser {
   token: string;
+}
+
+interface EmailLoginApiResponse {
+  id: number;
+  email: string;
 }
 
 export class InvalidCredentialsError extends Error {
@@ -33,6 +45,7 @@ const normalizeUser = (user: ApiUser): AuthUser => ({
   email: user.email.trim(),
   name: user.name?.trim() ?? "",
   surname: user.surname?.trim() ?? "",
+  profileCompleted: String(user.success_profile) === "1",
   registrationDate: user.registration_date?.trim(),
   lastActiveDate: user.last_active_date.trim(),
 });
@@ -48,10 +61,9 @@ const isUnauthorizedError = (error: unknown) => {
 export const authRepository = {
   async login(credentials: LoginCredentials): Promise<string> {
     try {
-      const { data } = await apiClient.post<ApiResponse<LoginApiResponse>>(
-        "/auth_email_password/",
-        credentials,
-      );
+      const { data } = await apiClient.post<
+        ApiResponse<AuthenticationApiResponse>
+      >("/auth_email_password/", credentials);
 
       if (!data.success) {
         throw new InvalidCredentialsError(data.message);
@@ -75,9 +87,57 @@ export const authRepository = {
     }
   },
 
+  async requestLoginCode(
+    input: RequestLoginCodeInput,
+  ): Promise<PendingCodeLogin> {
+    const { data } = await apiClient.post<ApiResponse<EmailLoginApiResponse>>(
+      "/auth_email/",
+      input,
+    );
+
+    if (!data.success) {
+      throw new Error(data.message);
+    }
+
+    const { id, email } = data.message;
+
+    if (
+      typeof id !== "number" ||
+      typeof email !== "string" ||
+      email.trim() === ""
+    ) {
+      throw new Error("Сервер вернул некорректные данные для входа по коду");
+    }
+
+    return {
+      userId: id,
+      email: email.trim(),
+    };
+  },
+
+  async loginWithCode({ userId, code }: LoginWithCodeInput): Promise<string> {
+    const { data } = await apiClient.post<
+      ApiResponse<AuthenticationApiResponse>
+    >("/check_code_auth_email/", {
+      id_user: String(userId),
+      code,
+    });
+
+    if (!data.success) {
+      throw new Error(data.message);
+    }
+
+    const token = data.message.token;
+
+    if (typeof token !== "string" || token.trim() === "") {
+      throw new Error("Сервер не вернул токен авторизации");
+    }
+
+    return token.trim();
+  },
+
   async getMe(): Promise<AuthUser> {
-    const { data } =
-      await apiClient.post<ApiResponse<ApiUser>>("/me/");
+    const { data } = await apiClient.post<ApiResponse<ApiUser>>("/me/");
 
     if (!data.success) {
       throw new Error(data.message);

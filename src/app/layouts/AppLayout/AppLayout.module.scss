@@ -34,6 +34,11 @@
   flex-direction: column;
 }
 
+.navigationDisabled {
+  pointer-events: none;
+  opacity: 0.45;
+}
+
 .menuLink {
   display: flex;
   align-items: center;
@@ -82,6 +87,18 @@
 .accountMenu {
   position: relative;
   border-top: 1px solid rgb(255 255 255 / 50%);
+}
+
+.logoutButton {
+  width: 100%;
+  padding: 24px 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-top: 1px solid rgb(255 255 255 / 50%);
+  cursor: pointer;
 }
 
 .account {
