@@ -60,7 +60,8 @@
 }
 
 .sidebarFooter {
-  margin: auto -24px -28px;
+  margin-top: auto;
+  padding: 0;
 }
 
 .supportButton {
@@ -68,7 +69,7 @@
   align-items: center;
   gap: 16px;
   width: 100%;
-  padding: 22px 24px;
+  padding: 22px 0;
   color: inherit;
   font-size: 18px;
   line-height: 24px;
@@ -85,10 +86,10 @@
 
 .account {
   display: grid;
-  grid-template-columns: 56px minmax(0, 1fr) auto;
-  gap: 16px;
+  grid-template-columns: 70px minmax(0, 1fr) auto;
+  gap: 12px;
   align-items: center;
-  padding: 22px 24px;
+  padding: 24px 0;
   cursor: pointer;
   list-style: none;
 }
@@ -99,8 +100,8 @@
 
 .accountAvatar {
   display: grid;
-  width: 56px;
-  height: 56px;
+  width: 70px;
+  height: 70px;
   place-items: center;
   color: #1636b8;
   font-size: 20px;
@@ -123,8 +124,8 @@
 }
 
 .accountInfo strong {
-  font-size: 20px;
-  line-height: 26px;
+  font-size: 18px;
+  line-height: 22px;
 }
 
 .accountInfo span {

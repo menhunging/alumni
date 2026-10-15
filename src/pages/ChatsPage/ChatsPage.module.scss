@@ -2,9 +2,9 @@
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   gap: 20px;
-  height: calc(100dvh - 40px);
-  overflow: hidden;
+  height: calc(100dvh - 80px);
   padding-bottom: 40px;
+  overflow: hidden;
 }
 
 .workspace {

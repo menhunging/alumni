@@ -30,10 +30,10 @@ export function LoginPage() {
         </h1>
         <div className={styles.description}>
           {loginMethod === "password" ? (
-            <p>Введите пароль, который вы использовали при регистрации.</p>
+            <p>Введите email и пароль, указанные при регистрации.</p>
           ) : (
             <p>
-              Введите ваше email, который вы использовали при регистрации.
+              Введите email, который вы использовали при регистрации.
               <br />
               Мы пришлём код для подтверждения входа.
             </p>
@@ -47,7 +47,6 @@ export function LoginPage() {
           />
         ) : (
           <CodeLoginForm
-            onSuccess={handleSuccess}
             onPasswordLoginClick={() => setLoginMethod("password")}
           />
         )}

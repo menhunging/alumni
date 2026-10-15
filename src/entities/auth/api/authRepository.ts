@@ -1,75 +1,88 @@
-import { mockUsers } from '../../chat/api/mockData'
-import type {
-  AuthSession,
-  CodeLoginCredentials,
-  LoginCredentials,
-  RequestLoginCodeInput,
-} from '../model/types'
-import { mockCredentials, mockLoginCode } from './mockCredentials'
+import axios from "axios";
+import { apiClient } from "../../../shared/api/apiClient";
+import type { AuthUser, LoginCredentials } from "../model/types";
 
-const requestDelay = 300
+type ApiResponse<T> =
+  | { success: true; message: T }
+  | { success: false; message: string };
+
+interface ApiUser {
+  id: number;
+  login: string;
+  email: string;
+  name?: string;
+  surname?: string;
+  registration_date?: string;
+  last_active_date: string;
+}
+
+interface LoginApiResponse {
+  token: string;
+}
 
 export class InvalidCredentialsError extends Error {
-  constructor() {
-    super('Invalid login or password')
-    this.name = 'InvalidCredentialsError'
+  constructor(message = "Неверный email или пароль") {
+    super(message);
+    this.name = "InvalidCredentialsError";
   }
 }
 
-export class InvalidLoginCodeError extends Error {
-  constructor() {
-    super('Invalid login code')
-    this.name = 'InvalidLoginCodeError'
-  }
-}
+const normalizeUser = (user: ApiUser): AuthUser => ({
+  id: user.id,
+  login: user.login.trim(),
+  email: user.email.trim(),
+  name: user.name?.trim() ?? "",
+  surname: user.surname?.trim() ?? "",
+  registrationDate: user.registration_date?.trim(),
+  lastActiveDate: user.last_active_date.trim(),
+});
 
-const createMockSession = (): AuthSession => {
-  const user = mockUsers[0]
-
-  if (!user) {
-    throw new Error('Mock user is not configured')
+const isUnauthorizedError = (error: unknown) => {
+  if (!axios.isAxiosError(error)) {
+    return false;
   }
 
-  return {
-    accessToken: 'mock-access-token',
-    user,
-  }
-}
+  return [400, 401, 403].includes(error.response?.status ?? 0);
+};
 
 export const authRepository = {
-  async login(credentials: LoginCredentials): Promise<AuthSession> {
-    await new Promise((resolve) => setTimeout(resolve, requestDelay))
+  async login(credentials: LoginCredentials): Promise<string> {
+    try {
+      const { data } = await apiClient.post<ApiResponse<LoginApiResponse>>(
+        "/auth_email_password/",
+        credentials,
+      );
 
-    if (
-      credentials.login !== mockCredentials.login ||
-      credentials.password !== mockCredentials.password
-    ) {
-      throw new InvalidCredentialsError()
+      if (!data.success) {
+        throw new InvalidCredentialsError(data.message);
+      }
+
+      if (!data.message.token) {
+        throw new InvalidCredentialsError();
+      }
+
+      return data.message.token.trim();
+    } catch (error) {
+      if (error instanceof InvalidCredentialsError) {
+        throw error;
+      }
+
+      if (isUnauthorizedError(error)) {
+        throw new InvalidCredentialsError();
+      }
+
+      throw error;
     }
-
-    return createMockSession()
   },
 
-  async requestLoginCode({ login }: RequestLoginCodeInput): Promise<void> {
-    await new Promise((resolve) => setTimeout(resolve, requestDelay))
+  async getMe(): Promise<AuthUser> {
+    const { data } =
+      await apiClient.post<ApiResponse<ApiUser>>("/me/");
 
-    if (login !== mockCredentials.login) {
-      throw new InvalidCredentialsError()
-    }
-  },
-
-  async loginWithCode(
-    credentials: CodeLoginCredentials,
-  ): Promise<AuthSession> {
-    await new Promise((resolve) => setTimeout(resolve, requestDelay))
-
-    if (
-      credentials.login !== mockCredentials.login ||
-      credentials.code !== mockLoginCode
-    ) {
-      throw new InvalidLoginCodeError()
+    if (!data.success) {
+      throw new Error(data.message);
     }
 
-    return createMockSession()
+    return normalizeUser(data.message);
   },
-}
+};

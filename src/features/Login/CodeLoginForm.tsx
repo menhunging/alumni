@@ -2,40 +2,32 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { type FormEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {
-  InvalidCredentialsError,
-  InvalidLoginCodeError,
-} from "../../entities/auth/api/authRepository";
-import {
-  useLoginWithCode,
-  useRequestLoginCode,
-} from "../../entities/auth/api/mutations";
 import { Button } from "../../shared/ui/Button/Button";
 import { Input } from "../../shared/ui/Input/Input";
 import styles from "./LoginForm.module.scss";
 
 const codeLoginSchema = z.object({
-  login: z.string().trim().min(1, "Введите логин"),
+  email: z
+    .string()
+    .trim()
+    .min(1, "Введите email")
+    .pipe(z.email("Введите корректный email")),
   code: z.string().regex(/^\d{6}$/, "Введите код из 6 цифр"),
 });
 
 type CodeLoginFormValues = z.infer<typeof codeLoginSchema>;
 
 interface CodeLoginFormProps {
-  onSuccess: () => void;
   onPasswordLoginClick: () => void;
 }
 
 export function CodeLoginForm({
-  onSuccess,
   onPasswordLoginClick,
 }: CodeLoginFormProps) {
   const [isCodeRequested, setIsCodeRequested] = useState(false);
-  const requestCodeMutation = useRequestLoginCode();
-  const loginMutation = useLoginWithCode();
+  const [isEndpointUnavailable, setIsEndpointUnavailable] = useState(false);
   const {
     formState: { errors },
-    getValues,
     handleSubmit,
     register,
     setFocus,
@@ -43,37 +35,23 @@ export function CodeLoginForm({
   } = useForm<CodeLoginFormValues>({
     resolver: zodResolver(codeLoginSchema),
     defaultValues: {
-      login: "",
+      email: "",
       code: "",
     },
   });
 
   const handleRequestCode = async () => {
-    const isLoginValid = await trigger("login");
-
-    if (!isLoginValid) {
+    if (!(await trigger("email"))) {
       return;
     }
 
-    requestCodeMutation.mutate(
-      { login: getValues("login").trim() },
-      {
-        onSuccess: () => {
-          setIsCodeRequested(true);
-          window.setTimeout(() => setFocus("code"));
-        },
-      },
-    );
+    setIsEndpointUnavailable(false);
+    setIsCodeRequested(true);
+    window.setTimeout(() => setFocus("code"));
   };
 
-  const onSubmit = handleSubmit(({ login, code }) => {
-    loginMutation.mutate(
-      {
-        login: login.trim(),
-        code,
-      },
-      { onSuccess },
-    );
+  const onSubmit = handleSubmit(() => {
+    setIsEndpointUnavailable(true);
   });
 
   const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -90,50 +68,39 @@ export function CodeLoginForm({
     <form className={styles.root} onSubmit={handleFormSubmit}>
       {!isCodeRequested && (
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="code-login">
-            Логин
+          <label className={styles.label} htmlFor="code-email">
+            Email<span>*</span>
           </label>
           <Input
-            id="code-login"
+            id="code-email"
             className={styles.input}
+            type="email"
             autoComplete="username"
-            aria-invalid={Boolean(errors.login)}
-            {...register("login")}
+            aria-invalid={Boolean(errors.email)}
+            {...register("email")}
           />
-          {errors.login && (
+          {errors.email && (
             <p className={styles.error} role="alert">
-              {errors.login.message}
+              {errors.email.message}
             </p>
           )}
         </div>
       )}
 
-      {requestCodeMutation.isError && (
-        <p className={styles.error} role="alert">
-          {requestCodeMutation.error instanceof InvalidCredentialsError
-            ? "Пользователь с таким логином не найден"
-            : "Не удалось отправить код"}
-        </p>
-      )}
-
-      {!isCodeRequested && (
-        <button
-          className={`${styles.methodSwitch} link`}
-          type="button"
-          onClick={onPasswordLoginClick}
-        >
-          Войти по паролю
-        </button>
-      )}
-
       {!isCodeRequested ? (
-        <Button
-          className={styles.submit}
-          type="submit"
-          disabled={requestCodeMutation.isPending}
-        >
-          {requestCodeMutation.isPending ? "Отправка…" : "Далее"}
-        </Button>
+        <>
+          <button
+            className={`${styles.methodSwitch} link`}
+            type="button"
+            onClick={onPasswordLoginClick}
+          >
+            Войти по паролю
+          </button>
+
+          <Button className={styles.submit} type="submit">
+            Далее
+          </Button>
+        </>
       ) : (
         <>
           <div className={styles.field}>
@@ -157,31 +124,22 @@ export function CodeLoginForm({
             )}
           </div>
 
-          {loginMutation.isError && (
+          {isEndpointUnavailable && (
             <p className={styles.error} role="alert">
-              {loginMutation.error instanceof InvalidLoginCodeError
-                ? "Неверный код"
-                : "Не удалось выполнить вход"}
+              Вход по коду пока недоступен
             </p>
           )}
 
           <button
             className={`${styles.methodSwitch} link`}
             type="button"
-            disabled={requestCodeMutation.isPending}
-            onClick={handleRequestCode}
+            onClick={() => setIsEndpointUnavailable(true)}
           >
-            {requestCodeMutation.isPending
-              ? "Отправка…"
-              : "Отправить код повторно"}
+            Отправить код повторно
           </button>
 
-          <Button
-            className={styles.submit}
-            type="submit"
-            disabled={loginMutation.isPending}
-          >
-            {loginMutation.isPending ? "Вход…" : "Войти"}
+          <Button className={styles.submit} type="submit">
+            Войти
           </Button>
         </>
       )}

@@ -1,19 +1,36 @@
-import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import { useAuthStore } from '../../entities/auth/model/authStore'
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useCurrentUser } from "../../entities/auth/api/queries";
+import { useAuthStore } from "../../entities/auth/model/authStore";
 
 export function ProtectedRoute() {
-  const isAuthenticated = useAuthStore((state) => Boolean(state.session))
-  const location = useLocation()
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const location = useLocation();
+  const currentUserQuery = useCurrentUser();
 
-  if (!isAuthenticated) {
+  if (!accessToken) {
     return (
       <Navigate
         to="/login"
         replace
         state={{ from: `${location.pathname}${location.search}` }}
       />
-    )
+    );
   }
 
-  return <Outlet />
+  // if (currentUserQuery.isPending) {
+  //   return <p>Загрузка данных пользователя...</p>;
+  // }
+
+  if (currentUserQuery.isError) {
+    return (
+      <div>
+        <p>Не удалось проверить сессию.</p>
+        <button type="button" onClick={() => currentUserQuery.refetch()}>
+          Повторить
+        </button>
+      </div>
+    );
+  }
+
+  return <Outlet />;
 }

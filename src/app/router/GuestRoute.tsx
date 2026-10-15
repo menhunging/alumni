@@ -2,7 +2,7 @@ import { Navigate, Outlet } from 'react-router-dom'
 import { useAuthStore } from '../../entities/auth/model/authStore'
 
 export function GuestRoute() {
-  const isAuthenticated = useAuthStore((state) => Boolean(state.session))
+  const isAuthenticated = useAuthStore((state) => Boolean(state.accessToken))
 
   return isAuthenticated ? <Navigate to="/" replace /> : <Outlet />
 }

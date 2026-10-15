@@ -8,7 +8,11 @@ import { Input } from "../../shared/ui/Input/Input";
 import styles from "./LoginForm.module.scss";
 
 const loginSchema = z.object({
-  login: z.string().trim().min(1, "Введите логин"),
+  email: z
+    .string()
+    .trim()
+    .min(1, "Введите email")
+    .pipe(z.email("Введите корректный email")),
   password: z.string().min(1, "Введите пароль"),
 });
 
@@ -28,42 +32,37 @@ export function LoginForm({ onSuccess, onCodeLoginClick }: LoginFormProps) {
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      login: "",
-      password: "",
+      email: "faraon111@yandex.ru",
+      password: "admin",
     },
   });
 
   const onSubmit = handleSubmit((credentials) => {
-    loginMutation.mutate(
-      {
-        ...credentials,
-        login: credentials.login.trim(),
-      },
-      { onSuccess },
-    );
+    loginMutation.mutate(credentials, { onSuccess });
   });
 
   const requestError =
     loginMutation.error instanceof InvalidCredentialsError
-      ? "Неверный логин или пароль"
+      ? loginMutation.error.message
       : "Не удалось выполнить вход";
 
   return (
     <form className={styles.root} onSubmit={onSubmit}>
       <div className={styles.field}>
-        <label className={styles.label} htmlFor="login">
+        <label className={styles.label} htmlFor="email">
           Email<span>*</span>
         </label>
         <Input
-          id="login"
+          id="email"
           className={styles.input}
+          type="email"
           autoComplete="username"
-          aria-invalid={Boolean(errors.login)}
-          {...register("login")}
+          aria-invalid={Boolean(errors.email)}
+          {...register("email")}
         />
-        {errors.login && (
+        {errors.email && (
           <p className={styles.error} role="alert">
-            {errors.login.message}
+            {errors.email.message}
           </p>
         )}
       </div>

@@ -1,19 +1,14 @@
-import type { User } from '../../chat/model/types'
-
 export interface LoginCredentials {
-  login: string
+  email: string
   password: string
 }
 
-export interface RequestLoginCodeInput {
+export interface AuthUser {
+  id: number
   login: string
-}
-
-export interface CodeLoginCredentials extends RequestLoginCodeInput {
-  code: string
-}
-
-export interface AuthSession {
-  accessToken: string
-  user: User
+  email: string
+  name: string
+  surname: string
+  registrationDate?: string
+  lastActiveDate: string
 }

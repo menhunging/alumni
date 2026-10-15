@@ -7,6 +7,7 @@ import homeIcon from "../../../assets/icons/home.svg";
 import notificationsIcon from "../../../assets/icons/notifications.svg";
 import settingsIcon from "../../../assets/icons/settings.svg";
 import logo from "../../../assets/images/logo.svg";
+import { useCurrentUser } from "../../../entities/auth/api/queries";
 import { useAuthStore } from "../../../entities/auth/model/authStore";
 import styles from "./AppLayout.module.scss";
 
@@ -25,7 +26,7 @@ const menuItems = [
 ] as const;
 
 export function AppLayout() {
-  const user = useAuthStore((state) => state.session?.user);
+  const { data: user } = useCurrentUser();
   const clearSession = useAuthStore((state) => state.clearSession);
   const queryClient = useQueryClient();
 
@@ -96,7 +97,11 @@ export function AppLayout() {
                 {user?.name.slice(0, 1).toUpperCase() ?? "П"}
               </span>
               <span className={styles.accountInfo}>
-                <strong>{user?.name ?? "Пользователь"}</strong>
+                <strong>
+                  {user
+                    ? `${user.name} ${user.surname}`.trim()
+                    : "Пользователь"}
+                </strong>
                 <span>Участник</span>
               </span>
               <svg

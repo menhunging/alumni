@@ -1,8 +1,9 @@
-import { useAuthStore } from "../../entities/auth/model/authStore";
+import { useCurrentUser } from "../../entities/auth/api/queries";
 import styles from "./HomePage.module.scss";
 
 export function HomePage() {
-  const userName = useAuthStore((state) => state.session?.user.name);
+  const { data: user } = useCurrentUser();
+  const userName = user?.name;
 
   return (
     <section className={styles.section}>

@@ -42,11 +42,11 @@ shared — общий UI-state и инфраструктура
 
 - `src/entities/auth/model/types.ts` — типы данных формы входа и пользовательской сессии.
 - `src/entities/auth/model/authStore.ts` — Zustand-хранилище сессии с сохранением в `localStorage`.
-- `src/entities/auth/api/mockCredentials.ts` — временные тестовые данные:
-  - логин: `alexey`;
-  - пароль: `alumni2026`.
-- `src/entities/auth/api/authRepository.ts` — имитирует серверный запрос авторизации. Позже здесь будет настоящий HTTP-запрос.
+- `src/shared/api/apiClient.ts` — общий Axios-клиент с `baseURL`, timeout, Bearer-токеном и обработкой `401`.
+- `.env.example` — пример переменной `VITE_API_BASE_URL`.
+- `src/entities/auth/api/authRepository.ts` — запросы входа по email/паролю и получения текущего пользователя.
 - `src/entities/auth/api/mutations.ts` — TanStack Mutation для входа и сохранения полученной сессии.
+- `src/entities/auth/api/queries.ts` — TanStack Query для проверки сессии через `/me/`.
 
 ## Форма входа
 
