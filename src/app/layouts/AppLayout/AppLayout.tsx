@@ -117,12 +117,15 @@ export function AppLayout() {
             <details className={styles.accountMenu}>
               <summary className={styles.account}>
                 <span className={styles.accountAvatar} aria-hidden="true">
-                  {user?.name.slice(0, 1).toUpperCase() ?? "П"}
+                  {(user?.name.slice(0, 1).toUpperCase() ||
+                    user?.login.slice(0, 1).toUpperCase()) ??
+                    "П"}
                 </span>
                 <span className={styles.accountInfo}>
                   <strong>
                     {user
-                      ? `${user.name} ${user.surname}`.trim()
+                      ? `${user.name} ${user.surname.slice(0, 1).toUpperCase()}`.trim() ||
+                        user?.login.trim()
                       : "Пользователь"}
                   </strong>
                   <span>Участник</span>
